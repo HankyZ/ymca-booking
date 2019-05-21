@@ -1,0 +1,15 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.hankyz'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+}
