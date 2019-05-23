@@ -11,7 +11,7 @@ public class YmcaBookingController {
     }
 
     public void doBooking() {
-        String day = "2";
+        String day = "25";
         String month = "5";
         String year = "2019";
 
