@@ -15,9 +15,9 @@ public class WebDriverHandler {
     private final String username = "077053";
     private final String password = "420150";
     private final String gfBadmintonFunctionText = "GF Badminton";
-    private final String badmintonCourtThreeText = "Badminton Court #3";
+    private final String badmintonCourtThreeText = "Badminton Court #2";
     private final String startTimeText = "4";
-    private final String startAmPmText = "AM";
+    private final String startAmPmText = "PM";
     private final String endTimeText = "6";
     private final String endAmPmText = "PM";
 
@@ -137,11 +137,11 @@ public class WebDriverHandler {
         new WebDriverWait(driver, 10)
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("chkBook1")));
 
-        driver.findElement(By.id("chkBook1")).click();
         try {
             driver.findElement(By.id("chkBook2")).click();
             driver.findElement(By.id("chkBook3")).click();
-            driver.findElement(By.id("chkBook4")).click();
+//            driver.findElement(By.id("chkBook3")).click();
+//            driver.findElement(By.id("chkBook4")).click();
         } catch (Exception ignored) {
 
         }
