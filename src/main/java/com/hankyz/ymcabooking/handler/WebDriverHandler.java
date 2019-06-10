@@ -159,7 +159,7 @@ public class WebDriverHandler {
     }
 
     /**
-     * Method that increments 2 days normally, 3 days if between 11:59:00 pm and 0:00:00 pm.
+     * get the booking day by incrementing 2 days to today's date, 3 days if between 11:59:00 pm and 0:00:00 pm.
      *
      * @return The booking day as a LocalDateTime object.
      */
@@ -167,11 +167,10 @@ public class WebDriverHandler {
         // get today's date
         LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
 
-        // We want to launch the app at 23:59:00 and keep searching until 0:00:00:000 (midnight)
+        // w want to launch the app at 23:59:00 and keep searching until 0:00:00:000 (midnight)
 
         // get the start time
         LocalTime bookingTime = LocalTime.of(23, 59, 00, 00000);
-
 
         // get the current time
         LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Montreal"));
