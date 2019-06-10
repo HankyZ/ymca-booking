@@ -168,14 +168,12 @@ public class WebDriverHandler {
         // get the start time
         LocalTime bookingTime = LocalTime.of(23,59,00);
 
-        // get midnight (end time)
-        LocalTime midnight = LocalTime.of(23,59,59);
 
         // get the current time
         LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Montreal"));
 
         // if the current time is between 23:59:00 and 23:59:59, we want to book three days later
-        if(now.isAfter(LocalDateTime.of(today,bookingTime)) && now.isBefore(LocalDateTime.of(today,midnight))){
+        if(now.isAfter(LocalDateTime.of(today,bookingTime)) && now.isBefore(today.atStartOfDay())){
             return now.plusDays(3);
         }
         // else we want to book courts that are two days later
