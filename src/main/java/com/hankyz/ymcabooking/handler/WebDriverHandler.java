@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 
 public class WebDriverHandler {
@@ -89,7 +91,7 @@ public class WebDriverHandler {
 
     public void book() {
 
-        LocalDateTime bookDay = getDateTime();
+        LocalDateTime bookDay = getBookingDay();
         String day = String.valueOf(bookDay.getDayOfMonth());
         String month = String.valueOf(bookDay.getMonthValue());
         String year = String.valueOf(bookDay.getYear());
@@ -156,11 +158,11 @@ public class WebDriverHandler {
 
     }
 
-    //method increment two days
-    private LocalDateTime getDateTime() {
-        //get time zone
+    // method increment two days
+    private LocalDateTime getBookingDay() {
+        // get time zone
         LocalDateTime today = LocalDateTime.now(ZoneId.of("America/Montreal"));
-        //return two days later
+        // return two days later
         return today.plusDays(2);
     }
 
