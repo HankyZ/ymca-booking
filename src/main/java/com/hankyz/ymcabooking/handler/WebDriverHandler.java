@@ -158,7 +158,11 @@ public class WebDriverHandler {
 
     }
 
-    /** method that increments 2 days normally, 3 days if between 11:59:00 pm and 0:00:00 pm. **/
+    /**
+     * Method that increments 2 days normally, 3 days if between 11:59:00 pm and 0:00:00 pm.
+     *
+     * @return The booking day as a LocalDateTime object.
+     */
     private LocalDateTime getBookingDay() {
         // get today's date
         LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
