@@ -18,21 +18,15 @@ public class YmcaBookingController {
 
     //method increment two days
     private LocalDateTime getDateTime() {
-        //get midnight
-        LocalTime midnight = LocalTime.MIDNIGHT;
         //get time zone
-        LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
+        LocalDateTime today = LocalDateTime.now(ZoneId.of("America/Montreal"));
         //return two days later
-        return LocalDateTime.of(today, midnight).plusDays(2);
+        return today.plusDays(2);
     }
 
     public void doBooking() {
-        // get two days later
-        LocalDateTime twoDays = getDateTime();
-        String day = String.valueOf(twoDays.getDayOfMonth());
-        String month = String.valueOf(twoDays.getMonthValue());
-        String year = String.valueOf(twoDays.getYear());
 
-        webDriverHandler.book(day, month, year);
+
+        webDriverHandler.book();
     }
 }

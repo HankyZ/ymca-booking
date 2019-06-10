@@ -7,6 +7,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 public class WebDriverHandler {
 
     private final String chromeDriverPath = "drivers/chromedriver.exe";
@@ -84,8 +87,12 @@ public class WebDriverHandler {
                 .until(ExpectedConditions.presenceOfElementLocated(By.id(loggedClientFieldId)));
     }
 
-    public void book(String day, String month, String year) {
+    public void book() {
 
+        LocalDateTime bookDay = getDateTime();
+        String day = String.valueOf(bookDay.getDayOfMonth());
+        String month = String.valueOf(bookDay.getMonthValue());
+        String year = String.valueOf(bookDay.getYear());
         signIn();
 
         // select facility booking
@@ -147,6 +154,13 @@ public class WebDriverHandler {
         }
         driver.findElement(By.id("AddBookBottom")).click();
 
+    }
+    //method increment two days
+    private LocalDateTime getDateTime() {
+        //get time zone
+        LocalDateTime today = LocalDateTime.now(ZoneId.of("America/Montreal"));
+        //return two days later
+        return today.plusDays(2);
     }
 
 }
