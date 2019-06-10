@@ -167,7 +167,7 @@ public class WebDriverHandler {
         // get today's date
         LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
 
-        // w want to launch the app at 23:59:00 and keep searching until 0:00:00:000 (midnight)
+        // we want to launch the app at 23:59:00 and keep searching until 0:00:00:000 (midnight)
 
         // get the start time
         LocalTime bookingTime = LocalTime.of(23, 59, 00, 00000);
