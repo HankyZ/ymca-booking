@@ -158,7 +158,7 @@ public class WebDriverHandler {
 
     }
 
-    // method that increments 2 days normally, 3 days if between 11:59:00 pm and 11:59:59 pm.
+    // method that increments 2 days normally, 3 days if between 11:59:00 pm and 0:00:00 pm.
     private LocalDateTime getBookingDay() {
         // get today's date
         LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
@@ -173,7 +173,7 @@ public class WebDriverHandler {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Montreal"));
 
         // if the current time is between 23:59:00 and 0:00:00, we want to book three days later
-        if (now.isAfter(LocalDateTime.of(today, bookingTime)) && now.isBefore(today.plusDays(1).atStartOfDay())) {
+        if (now.isAfter(LocalDateTime.of(today, bookingTime))) {
             return now.plusDays(3);
         }
         // else we want to book courts that are two days later
