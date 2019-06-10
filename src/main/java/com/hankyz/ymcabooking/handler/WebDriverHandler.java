@@ -163,17 +163,17 @@ public class WebDriverHandler {
         // get today's date
         LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
 
-        // We want to launch the app at 23:59:00 and keep searching until 23:59:59 (midnight)
+        // We want to launch the app at 23:59:00 and keep searching until 0:00:00:000 (midnight)
 
         // get the start time
-        LocalTime bookingTime = LocalTime.of(23,59,00);
+        LocalTime bookingTime = LocalTime.of(23, 59, 00, 00000);
 
 
         // get the current time
         LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Montreal"));
 
-        // if the current time is between 23:59:00 and 23:59:59, we want to book three days later
-        if(now.isAfter(LocalDateTime.of(today,bookingTime)) && now.isBefore(today.atStartOfDay())){
+        // if the current time is between 23:59:00 and 0:00:00, we want to book three days later
+        if (now.isAfter(LocalDateTime.of(today, bookingTime)) && now.isBefore(today.plusDays(1).atStartOfDay())) {
             return now.plusDays(3);
         }
         // else we want to book courts that are two days later
