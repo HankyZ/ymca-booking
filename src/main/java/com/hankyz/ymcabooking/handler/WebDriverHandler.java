@@ -14,8 +14,8 @@ import java.time.ZoneId;
 
 public class WebDriverHandler {
 
-    private static String OS = System.getProperty("os.name").toLowerCase();
-    private final String chromeDriverPath = (OS.indexOf("mac") >= 0) ? "/usr/local/bin/chromedriver" : "drivers/chromedriver.exe";
+    private final String OS = System.getProperty("os.name").toLowerCase();
+    private final String chromeDriverPath;
     private final String ymcaUrl = "https://inscription.ymcaquebec.org/Facilities/FacilitiesSearchWizard.asp";
 
     private final String username = "077053";
@@ -52,7 +52,7 @@ public class WebDriverHandler {
 
     private WebDriver driver;
 
-    private static LocalDateTime bookingDayTime;
+    private final LocalDateTime bookingDayTime;
 
     public static WebDriverHandler getInstance() {
         if (instance == null)
@@ -80,6 +80,7 @@ public class WebDriverHandler {
     }
 
     private WebDriverHandler() {
+        chromeDriverPath = (OS.indexOf("mac") >= 0) ? "/usr/local/bin/chromedriver" : "drivers/chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
         // start chrome browser
         driver = new ChromeDriver();
