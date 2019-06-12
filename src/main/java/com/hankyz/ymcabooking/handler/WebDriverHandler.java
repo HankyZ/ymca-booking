@@ -13,8 +13,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 
 public class WebDriverHandler {
-
-    private final String OS = System.getProperty("os.name").toLowerCase();
     private final String chromeDriverPath;
     private final String ymcaUrl = "https://inscription.ymcaquebec.org/Facilities/FacilitiesSearchWizard.asp";
 
@@ -54,6 +52,19 @@ public class WebDriverHandler {
 
     private final LocalDateTime bookingDayTime;
 
+    private WebDriverHandler() {
+        // define chrome driver path
+        String OS = System.getProperty("os.name").toLowerCase();
+        chromeDriverPath = (OS.indexOf("mac") >= 0) ? "drivers/macos/chromedriver" : "drivers/win/chromedriver.exe";
+        System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+        // start chrome browser
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get(ymcaUrl);
+        bookingDayTime = getBookingDay();
+//        driver.quit();
+    }
+
     public static WebDriverHandler getInstance() {
         if (instance == null)
             instance = new WebDriverHandler();
@@ -77,18 +88,6 @@ public class WebDriverHandler {
         }
         // book two days later if after 00:00:00
         return now.plusDays(2);
-    }
-
-    private WebDriverHandler() {
-        // define chrome driver path
-        chromeDriverPath = (OS.indexOf("mac") >= 0) ? "drivers/macos/chromedriver" : "drivers/win/chromedriver.exe";
-        System.setProperty("webdriver.chrome.driver", chromeDriverPath);
-        // start chrome browser
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.get(ymcaUrl);
-        bookingDayTime = getBookingDay();
-//        driver.quit();
     }
 
     private void signIn() {
