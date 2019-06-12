@@ -80,7 +80,7 @@ public class WebDriverHandler {
     }
 
     private WebDriverHandler() {
-        chromeDriverPath = (OS.indexOf("mac") >= 0) ? "/usr/local/bin/chromedriver" : "drivers/chromedriver.exe";
+        chromeDriverPath = (OS.indexOf("mac") >= 0) ? "drivers/MACOSchromedriver" : "drivers/chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
         // start chrome browser
         driver = new ChromeDriver();
