@@ -11,10 +11,6 @@ public class YmcaBookingController {
     }
 
     public void doBooking() {
-        String day = "3";
-        String month = "6";
-        String year = "2019";
-
-        webDriverHandler.book(day, month, year);
+        webDriverHandler.book();
     }
 }

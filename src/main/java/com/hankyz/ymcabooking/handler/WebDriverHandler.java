@@ -7,9 +7,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class WebDriverHandler {
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 
-    private final String chromeDriverPath = "drivers/chromedriver.exe";
+public class WebDriverHandler {
+    private final String chromeDriverPath;
     private final String ymcaUrl = "https://inscription.ymcaquebec.org/Facilities/FacilitiesSearchWizard.asp";
 
     private final String username = "077053";
@@ -46,20 +50,44 @@ public class WebDriverHandler {
 
     private WebDriver driver;
 
+    private final LocalDateTime bookingDayTime;
+
+    private WebDriverHandler() {
+        // define chrome driver path
+        String OS = System.getProperty("os.name").toLowerCase();
+        chromeDriverPath = (OS.indexOf("mac") >= 0) ? "drivers/macos/chromedriver" : "drivers/win/chromedriver.exe";
+        System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+        // start chrome browser
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get(ymcaUrl);
+        bookingDayTime = getBookingDay();
+//        driver.quit();
+    }
+
     public static WebDriverHandler getInstance() {
         if (instance == null)
             instance = new WebDriverHandler();
         return instance;
     }
 
-    private WebDriverHandler() {
-        System.setProperty("webdriver.chrome.driver", chromeDriverPath);
-        // start chrome browser
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.get(ymcaUrl);
+    /**
+     * Get the booking day by incrementing 2 days to today's date, 3 days if between 11:59:00 pm and 0:00:00 pm.
+     *
+     * @return The booking day as a LocalDateTime object.
+     */
+    private LocalDateTime getBookingDay() {
+        // launch app at 23:59:00 and keep searching until 0:00:00:000
+        LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
+        LocalTime bookingTime = LocalTime.of(23, 59, 00, 00000);
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Montreal"));
 
-//        driver.quit();
+        // book three days later if before 00:00:00
+        if (now.isAfter(LocalDateTime.of(today, bookingTime))) {
+            return now.plusDays(3);
+        }
+        // book two days later if after 00:00:00
+        return now.plusDays(2);
     }
 
     private void signIn() {
@@ -84,7 +112,10 @@ public class WebDriverHandler {
                 .until(ExpectedConditions.presenceOfElementLocated(By.id(loggedClientFieldId)));
     }
 
-    public void book(String day, String month, String year) {
+    public void book() {
+        String day = String.valueOf(bookingDayTime.getDayOfMonth());
+        String month = String.valueOf(bookingDayTime.getMonthValue());
+        String year = String.valueOf(bookingDayTime.getYear());
 
         signIn();
 
@@ -146,7 +177,5 @@ public class WebDriverHandler {
 
         }
         driver.findElement(By.id("AddBookBottom")).click();
-
     }
-
 }
