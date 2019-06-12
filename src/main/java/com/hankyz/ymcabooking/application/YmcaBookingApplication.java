@@ -8,5 +8,4 @@ public class YmcaBookingApplication {
         YmcaBookingController ymcaBookingController = new YmcaBookingController();
         ymcaBookingController.doBooking();
     }
-
 }

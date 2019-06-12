@@ -7,8 +7,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
@@ -90,11 +90,11 @@ public class WebDriverHandler {
     }
 
     public void book() {
-
         LocalDateTime bookDay = getBookingDay();
-        String day = String.valueOf(bookDay.getDayOfMonth());
-        String month = String.valueOf(bookDay.getMonthValue());
-        String year = String.valueOf(bookDay.getYear());
+        int day = bookDay.getDayOfMonth();
+        int month = bookDay.getMonthValue();
+        int year = bookDay.getYear();
+
         signIn();
 
         // select facility booking
@@ -108,17 +108,17 @@ public class WebDriverHandler {
         Select startDaySelect = new Select(driver.findElement(By.id(startDaySelectId)));
         Select startMonthSelect = new Select(driver.findElement(By.id(startMonthSelectId)));
         Select startYearSelect = new Select(driver.findElement(By.id(startYearSelectId)));
-        startDaySelect.selectByValue(day);
-        startMonthSelect.selectByValue(month);
-        startYearSelect.selectByValue(year);
+        startDaySelect.selectByIndex(day);
+        startMonthSelect.selectByIndex(month);
+        startYearSelect.selectByIndex(year);
 
         // select end date
         Select endDaySelect = new Select(driver.findElement(By.id(endDaySelectId)));
         Select endMonthSelect = new Select(driver.findElement(By.id(endMonthSelectId)));
         Select endYearSelect = new Select(driver.findElement(By.id(endYearSelectId)));
-        endDaySelect.selectByValue(day);
-        endMonthSelect.selectByValue(month);
-        endYearSelect.selectByValue(year);
+        endDaySelect.selectByIndex(day);
+        endMonthSelect.selectByIndex(month);
+        endYearSelect.selectByIndex(year);
 
         // select start time
         Select startTimeSelect = new Select(driver.findElement(By.name(startTimeSelectName)));
@@ -155,7 +155,6 @@ public class WebDriverHandler {
 
         }
         driver.findElement(By.id("AddBookBottom")).click();
-
     }
 
     /**
@@ -164,6 +163,7 @@ public class WebDriverHandler {
      * @return The booking day as a LocalDateTime object.
      */
     private LocalDateTime getBookingDay() {
+
         // launch app at 23:59:00 and keep searching until 0:00:00:000
         LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
         LocalTime bookingTime = LocalTime.of(23, 59, 00, 00000);
@@ -176,5 +176,4 @@ public class WebDriverHandler {
         // book two days later if after 00:00:00
         return now.plusDays(2);
     }
-
 }
