@@ -14,7 +14,8 @@ import java.time.ZoneId;
 
 public class WebDriverHandler {
 
-    private final String chromeDriverPath = "drivers/chromedriver.exe";
+    private static String OS = System.getProperty("os.name").toLowerCase();
+    private final String chromeDriverPath = (OS.indexOf("mac") >= 0) ? "/usr/local/bin/chromedriver" : "drivers/chromedriver.exe";
     private final String ymcaUrl = "https://inscription.ymcaquebec.org/Facilities/FacilitiesSearchWizard.asp";
 
     private final String username = "077053";
@@ -51,10 +52,31 @@ public class WebDriverHandler {
 
     private WebDriver driver;
 
+    private static LocalDateTime bookingDayTime;
+
     public static WebDriverHandler getInstance() {
         if (instance == null)
             instance = new WebDriverHandler();
         return instance;
+    }
+
+    /**
+     * Get the booking day by incrementing 2 days to today's date, 3 days if between 11:59:00 pm and 0:00:00 pm.
+     *
+     * @return The booking day as a LocalDateTime object.
+     */
+    private LocalDateTime getBookingDay() {
+        // launch app at 23:59:00 and keep searching until 0:00:00:000
+        LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
+        LocalTime bookingTime = LocalTime.of(23, 59, 00, 00000);
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Montreal"));
+
+        // book three days later if before 00:00:00
+        if (now.isAfter(LocalDateTime.of(today, bookingTime))) {
+            return now.plusDays(3);
+        }
+        // book two days later if after 00:00:00
+        return now.plusDays(2);
     }
 
     private WebDriverHandler() {
@@ -63,7 +85,7 @@ public class WebDriverHandler {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get(ymcaUrl);
-
+        bookingDayTime = getBookingDay();
 //        driver.quit();
     }
 
@@ -90,10 +112,9 @@ public class WebDriverHandler {
     }
 
     public void book() {
-        LocalDateTime bookDay = getBookingDay();
-        int day = bookDay.getDayOfMonth();
-        int month = bookDay.getMonthValue();
-        int year = bookDay.getYear();
+        String day = String.valueOf(bookingDayTime.getDayOfMonth());
+        String month = String.valueOf(bookingDayTime.getMonthValue());
+        String year = String.valueOf(bookingDayTime.getYear());
 
         signIn();
 
@@ -108,17 +129,17 @@ public class WebDriverHandler {
         Select startDaySelect = new Select(driver.findElement(By.id(startDaySelectId)));
         Select startMonthSelect = new Select(driver.findElement(By.id(startMonthSelectId)));
         Select startYearSelect = new Select(driver.findElement(By.id(startYearSelectId)));
-        startDaySelect.selectByIndex(day);
-        startMonthSelect.selectByIndex(month);
-        startYearSelect.selectByIndex(year);
+        startDaySelect.selectByValue(day);
+        startMonthSelect.selectByValue(month);
+        startYearSelect.selectByValue(year);
 
         // select end date
         Select endDaySelect = new Select(driver.findElement(By.id(endDaySelectId)));
         Select endMonthSelect = new Select(driver.findElement(By.id(endMonthSelectId)));
         Select endYearSelect = new Select(driver.findElement(By.id(endYearSelectId)));
-        endDaySelect.selectByIndex(day);
-        endMonthSelect.selectByIndex(month);
-        endYearSelect.selectByIndex(year);
+        endDaySelect.selectByValue(day);
+        endMonthSelect.selectByValue(month);
+        endYearSelect.selectByValue(year);
 
         // select start time
         Select startTimeSelect = new Select(driver.findElement(By.name(startTimeSelectName)));
@@ -155,25 +176,5 @@ public class WebDriverHandler {
 
         }
         driver.findElement(By.id("AddBookBottom")).click();
-    }
-
-    /**
-     * Get the booking day by incrementing 2 days to today's date, 3 days if between 11:59:00 pm and 0:00:00 pm.
-     *
-     * @return The booking day as a LocalDateTime object.
-     */
-    private LocalDateTime getBookingDay() {
-
-        // launch app at 23:59:00 and keep searching until 0:00:00:000
-        LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
-        LocalTime bookingTime = LocalTime.of(23, 59, 00, 00000);
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Montreal"));
-
-        // book three days later if before 00:00:00
-        if (now.isAfter(LocalDateTime.of(today, bookingTime))) {
-            return now.plusDays(3);
-        }
-        // book two days later if after 00:00:00
-        return now.plusDays(2);
     }
 }
