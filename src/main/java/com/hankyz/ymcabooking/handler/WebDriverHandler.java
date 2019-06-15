@@ -20,9 +20,9 @@ public class WebDriverHandler {
     private final String password = "420150";
     private final String gfBadmintonFunctionText = "GF Badminton";
     private final String badmintonCourtThreeText = "Badminton Court #2";
-    private final String startTimeText = "4";
+    private final String startTimeText = "11";
     private final String startAmPmText = "PM";
-    private final String endTimeText = "6";
+    private final String endTimeText = "12";
     private final String endAmPmText = "PM";
 
     private final String signInButtonId = "toolbar-login";
@@ -54,8 +54,8 @@ public class WebDriverHandler {
 
     private WebDriverHandler() {
         // define chrome driver path
-        String OS = System.getProperty("os.name").toLowerCase();
-        chromeDriverPath = (OS.indexOf("mac") >= 0) ? "drivers/macos/chromedriver" : "drivers/win/chromedriver.exe";
+        String os = System.getProperty("os.name").toLowerCase();
+        chromeDriverPath = (os.contains("mac")) ? "drivers/macos/chromedriver" : "drivers/win/chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
         // start chrome browser
         driver = new ChromeDriver();
@@ -165,8 +165,12 @@ public class WebDriverHandler {
         // click on search
         driver.findElement(By.xpath(searchButtonXpathSelector)).click();
 
+        // wait for page to load
         new WebDriverWait(driver, 10)
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("chkBook1")));
+
+        // keep clicking on search until availabilities are found
+        driver.findElement(By.xpath(searchButtonXpathSelector)).click();
 
         try {
             driver.findElement(By.id("chkBook2")).click();
