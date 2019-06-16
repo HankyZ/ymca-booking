@@ -1,6 +1,7 @@
 package com.hankyz.ymcabooking.handler;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -162,21 +163,24 @@ public class WebDriverHandler {
         Select typeSelect = new Select(driver.findElement(By.id(facilityTypeSelectId)));
         typeSelect.selectByVisibleText(badmintonCourtThreeText);
 
-        // keep looping until results are found
-        boolean notFound = true;
-        while (notFound) {
+        // keep looping for 60s until results are found
+        long t= System.currentTimeMillis();
+        long end = t+60000;
+        while (System.currentTimeMillis() < end) {
             driver.findElement(By.xpath(searchButtonXpathSelector)).click();
-            notFound = driver.findElements(By.id("chkBook2")) == null;
+            if (driver.findElements(By.id("chBook2")) == null) {
+                break;
+            }
             try {
-                // sleep 0.2 second
                 Thread.sleep(200);
                 // if found stop
                 driver.findElement(By.id("chkBook2")).click();
                 driver.findElement(By.id("chkBook3")).click();
 //            driver.findElement(By.id("chkBook3")).click();
 //            driver.findElement(By.id("chkBook4")).click();
-            } catch (Exception ignored) {
-
+            } catch (InterruptedException | NoSuchElementException e) {
+                e.printStackTrace();
+                continue;
             }
         }
         driver.findElement(By.id("AddBookBottom")).click();
