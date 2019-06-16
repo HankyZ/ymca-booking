@@ -162,23 +162,24 @@ public class WebDriverHandler {
         Select typeSelect = new Select(driver.findElement(By.id(facilityTypeSelectId)));
         typeSelect.selectByVisibleText(badmintonCourtThreeText);
 
-        // click on search
-        driver.findElement(By.xpath(searchButtonXpathSelector)).click();
-
-        // wait for page to load
-        new WebDriverWait(driver, 10)
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("chkBook1")));
-
-        // keep clicking on search until availabilities are found
-        driver.findElement(By.xpath(searchButtonXpathSelector)).click();
-
-        try {
-            driver.findElement(By.id("chkBook2")).click();
-            driver.findElement(By.id("chkBook3")).click();
+        // keep looping until results are found
+        boolean notFound = true;
+        while (notFound) {
+            driver.findElement(By.xpath(searchButtonXpathSelector)).click();
+            try {
+                // sleep 3 seconds
+                Thread.sleep(3000);
+                // if found we stop
+                if(driver.findElement(By.id("chkBook2")).isDisplayed()){
+                    notFound = false;
+                }
+                driver.findElement(By.id("chkBook2")).click();
+                driver.findElement(By.id("chkBook3")).click();
 //            driver.findElement(By.id("chkBook3")).click();
 //            driver.findElement(By.id("chkBook4")).click();
-        } catch (Exception ignored) {
+            } catch (Exception ignored) {
 
+            }
         }
         driver.findElement(By.id("AddBookBottom")).click();
     }
