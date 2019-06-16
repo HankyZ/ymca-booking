@@ -55,7 +55,7 @@ public class WebDriverHandler {
     private WebDriverHandler() {
         // define chrome driver path
         String os = System.getProperty("os.name").toLowerCase();
-        chromeDriverPath = (os.contains("mac")) ? "drivers/macos/chromedriver" : "drivers/win/chromedriver.exe";
+        chromeDriverPath = os.contains("mac") ? "drivers/macos/chromedriver" : "drivers/win/chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
         // start chrome browser
         driver = new ChromeDriver();
@@ -166,13 +166,11 @@ public class WebDriverHandler {
         boolean notFound = true;
         while (notFound) {
             driver.findElement(By.xpath(searchButtonXpathSelector)).click();
+            notFound = driver.findElements(By.id("chkBook2")) == null;
             try {
-                // sleep 3 seconds
-                Thread.sleep(3000);
-                // if found we stop
-                if(driver.findElement(By.id("chkBook2")).isDisplayed()){
-                    notFound = false;
-                }
+                // sleep 0.2 second
+                Thread.sleep(200);
+                // if found stop
                 driver.findElement(By.id("chkBook2")).click();
                 driver.findElement(By.id("chkBook3")).click();
 //            driver.findElement(By.id("chkBook3")).click();
