@@ -21,8 +21,8 @@ public class WebDriverHandler {
     private final String password = "420150";
     private final String gfBadmintonFunctionText = "GF Badminton";
     private final String badmintonCourtThreeText = "Badminton Court #2";
-    private final String startTimeText = "11";
-    private final String startAmPmText = "PM";
+    private final String startTimeText = "1";
+    private final String startAmPmText = "AM";
     private final String endTimeText = "12";
     private final String endAmPmText = "PM";
 
@@ -167,7 +167,7 @@ public class WebDriverHandler {
         for (long i = 0; i < 300; i += 1) {
             driver.findElement(By.xpath(searchButtonXpathSelector)).click();
             // if found stop
-            if (driver.findElements(By.id("chBook1")) == null) {
+            if (driver.findElements(By.id("chkBook1")) != null) {
                 break;
             }
             try {
@@ -177,9 +177,10 @@ public class WebDriverHandler {
             }
         }
         // availabilities found
+        new WebDriverWait(driver, 10)
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("chkBook1")));
         try {
-            driver.findElement(By.id("chkBook2")).click();
-            driver.findElement(By.id("chkBook3")).click();
+            driver.findElement(By.id("chkBook1")).click();
 //            driver.findElement(By.id("chkBook3")).click();
 //            driver.findElement(By.id("chkBook4")).click();
             driver.findElement(By.id("AddBookBottom")).click();
