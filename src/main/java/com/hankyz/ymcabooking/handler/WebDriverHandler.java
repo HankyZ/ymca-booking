@@ -164,11 +164,11 @@ public class WebDriverHandler {
         typeSelect.selectByVisibleText(badmintonCourtThreeText);
 
         // keep looping for 60s until results are found
-        long t= System.currentTimeMillis();
-        long end = t+60000;
-        while (System.currentTimeMillis() < end) {
+        long now = System.currentTimeMillis();
+        long end = now + 60000;
+        for (long i = now; i < end; i += 1000) {
             driver.findElement(By.xpath(searchButtonXpathSelector)).click();
-            if (driver.findElements(By.id("chBook2")) == null) {
+            if (driver.findElements(By.id("chBook1")) == null) {
                 break;
             }
             try {
