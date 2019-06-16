@@ -164,25 +164,27 @@ public class WebDriverHandler {
         typeSelect.selectByVisibleText(badmintonCourtThreeText);
 
         // keep looping for 60s until results are found
-        long now = System.currentTimeMillis();
-        long end = now + 60000;
-        for (long i = now; i < end; i += 1000) {
+        for (long i = 0; i < 300; i += 1) {
             driver.findElement(By.xpath(searchButtonXpathSelector)).click();
+            // if found stop
             if (driver.findElements(By.id("chBook1")) == null) {
                 break;
             }
             try {
                 Thread.sleep(200);
-                // if found stop
-                driver.findElement(By.id("chkBook2")).click();
-                driver.findElement(By.id("chkBook3")).click();
-//            driver.findElement(By.id("chkBook3")).click();
-//            driver.findElement(By.id("chkBook4")).click();
-            } catch (InterruptedException | NoSuchElementException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
-                continue;
             }
         }
-        driver.findElement(By.id("AddBookBottom")).click();
+        // availabilities found
+        try {
+            driver.findElement(By.id("chkBook2")).click();
+            driver.findElement(By.id("chkBook3")).click();
+//            driver.findElement(By.id("chkBook3")).click();
+//            driver.findElement(By.id("chkBook4")).click();
+            driver.findElement(By.id("AddBookBottom")).click();
+        }catch (NoSuchElementException e){
+            e.printStackTrace();
+        }
     }
 }
