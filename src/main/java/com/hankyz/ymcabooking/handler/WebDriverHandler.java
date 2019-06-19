@@ -3,6 +3,7 @@ package com.hankyz.ymcabooking.handler;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -22,7 +23,7 @@ public class WebDriverHandler {
     private final String gfBadmintonFunctionText = "GF Badminton";
     private final String badmintonCourtThreeText = "Badminton Court #2";
     private final String startTimeText = "11";
-    private final String startAmPmText = "PM";
+    private final String startAmPmText = "AM";
     private final String endTimeText = "12";
     private final String endAmPmText = "PM";
 
@@ -163,29 +164,34 @@ public class WebDriverHandler {
         Select typeSelect = new Select(driver.findElement(By.id(facilityTypeSelectId)));
         typeSelect.selectByVisibleText(badmintonCourtThreeText);
 
-        // keep looping for 60s until results are found
-        for (long i = 0; i < 300; i += 1) {
-            driver.findElement(By.xpath(searchButtonXpathSelector)).click();
-            // if found stop
-            if (driver.findElements(By.id("chkBook1")).size() != 0) {
+        WebElement searchButton = driver.findElement(By.xpath(searchButtonXpathSelector));
+
+        // keep looping for at least 60s until results are found
+        for (int i = 0; i < 600; i++) {
+            searchButton.click();
+
+            boolean notFoundMessageFound = false;
+            boolean bookingCheckboxFound = false;
+
+            while (!notFoundMessageFound && !bookingCheckboxFound) {
+                notFoundMessageFound = !driver.findElements(By.className("no-search-result-div")).isEmpty();
+                bookingCheckboxFound = !driver.findElements(By.id("chkBook1")).isEmpty();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (bookingCheckboxFound)
                 break;
-            }
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
-        // availabilities found, wait for loading
-        new WebDriverWait(driver, 10)
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("chkBook1")));
         try {
             driver.findElement(By.id("chkBook1")).click();
-            driver.findElement(By.id("chkBook2")).click();
+//            driver.findElement(By.id("chkBook2")).click();
 //            driver.findElement(By.id("chkBook3")).click();
 //            driver.findElement(By.id("chkBook4")).click();
             driver.findElement(By.id("AddBookBottom")).click();
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             e.printStackTrace();
         }
     }
