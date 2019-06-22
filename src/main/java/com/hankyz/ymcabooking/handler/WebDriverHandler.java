@@ -23,7 +23,7 @@ public class WebDriverHandler {
     private final String gfBadmintonFunctionText = "GF Badminton";
     private final String badmintonCourtThreeText = "Badminton Court #2";
     private final String startTimeText = "11";
-    private final String startAmPmText = "AM";
+    private final String startAmPmText = "PM";
     private final String endTimeText = "12";
     private final String endAmPmText = "PM";
 
@@ -179,7 +179,7 @@ public class WebDriverHandler {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.out.println("Sleep interrupted");
                 }
             }
             if (bookingCheckboxFound)
@@ -190,9 +190,9 @@ public class WebDriverHandler {
 //            driver.findElement(By.id("chkBook2")).click();
 //            driver.findElement(By.id("chkBook3")).click();
 //            driver.findElement(By.id("chkBook4")).click();
-            driver.findElement(By.id("AddBookBottom")).click();
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
+            System.out.println("Unable to find any availabilities");
         }
+        driver.findElement(By.id("AddBookBottom")).click();
     }
 }
