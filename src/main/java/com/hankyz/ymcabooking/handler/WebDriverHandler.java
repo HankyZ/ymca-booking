@@ -1,7 +1,9 @@
 package com.hankyz.ymcabooking.handler;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -20,9 +22,9 @@ public class WebDriverHandler {
     private final String password = "420150";
     private final String gfBadmintonFunctionText = "GF Badminton";
     private final String badmintonCourtThreeText = "Badminton Court #2";
-    private final String startTimeText = "4";
+    private final String startTimeText = "11";
     private final String startAmPmText = "PM";
-    private final String endTimeText = "6";
+    private final String endTimeText = "12";
     private final String endAmPmText = "PM";
 
     private final String signInButtonId = "toolbar-login";
@@ -54,8 +56,8 @@ public class WebDriverHandler {
 
     private WebDriverHandler() {
         // define chrome driver path
-        String OS = System.getProperty("os.name").toLowerCase();
-        chromeDriverPath = (OS.indexOf("mac") >= 0) ? "drivers/macos/chromedriver" : "drivers/win/chromedriver.exe";
+        String os = System.getProperty("os.name").toLowerCase();
+        chromeDriverPath = os.contains("mac") ? "drivers/macos/chromedriver" : "drivers/win/chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
         // start chrome browser
         driver = new ChromeDriver();
@@ -162,19 +164,34 @@ public class WebDriverHandler {
         Select typeSelect = new Select(driver.findElement(By.id(facilityTypeSelectId)));
         typeSelect.selectByVisibleText(badmintonCourtThreeText);
 
-        // click on search
-        driver.findElement(By.xpath(searchButtonXpathSelector)).click();
+        WebElement searchButton = driver.findElement(By.xpath(searchButtonXpathSelector));
 
-        new WebDriverWait(driver, 10)
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("chkBook1")));
+        // keep looping for at least 60s until results are found
+        for (int i = 0; i < 600; i++) {
+            searchButton.click();
 
+            boolean notFoundMessageFound = false;
+            boolean bookingCheckboxFound = false;
+
+            while (!notFoundMessageFound && !bookingCheckboxFound) {
+                notFoundMessageFound = !driver.findElements(By.className("no-search-result-div")).isEmpty();
+                bookingCheckboxFound = !driver.findElements(By.id("chkBook1")).isEmpty();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    System.out.println("Sleep interrupted");
+                }
+            }
+            if (bookingCheckboxFound)
+                break;
+        }
         try {
-            driver.findElement(By.id("chkBook2")).click();
-            driver.findElement(By.id("chkBook3")).click();
+            driver.findElement(By.id("chkBook1")).click();
+//            driver.findElement(By.id("chkBook2")).click();
 //            driver.findElement(By.id("chkBook3")).click();
 //            driver.findElement(By.id("chkBook4")).click();
-        } catch (Exception ignored) {
-
+        } catch (NoSuchElementException e) {
+            System.out.println("Unable to find any availabilities");
         }
         driver.findElement(By.id("AddBookBottom")).click();
     }
