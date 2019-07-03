@@ -15,7 +15,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 
 public class WebDriverHandler {
-    private final String chromeDriverPath;
     private final String ymcaUrl = "https://inscription.ymcaquebec.org/Facilities/FacilitiesSearchWizard.asp";
 
     private final String username = "077053";
@@ -57,7 +56,12 @@ public class WebDriverHandler {
     private WebDriverHandler() {
         // define chrome driver path
         String os = System.getProperty("os.name").toLowerCase();
-        chromeDriverPath = os.contains("mac") ? "drivers/macos/chromedriver" : "drivers/win/chromedriver.exe";
+        String chromeDriverPath = System.getProperty("user.home");
+        if (os.contains("mac")) {
+            chromeDriverPath += "/YmcaBooking/drivers/chromedriver";
+        } else {
+            chromeDriverPath += "/AppData/Local/YmcaBooking/drivers/chromedriver.exe";
+        }
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
         // start chrome browser
         driver = new ChromeDriver();
